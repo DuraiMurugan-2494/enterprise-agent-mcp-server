@@ -1,0 +1,23 @@
+# Pinned to versions with known CVEs patched as of 2026-09.
+# Re-run `pip-audit -r requirements.txt` periodically — this is a snapshot, not a guarantee.
+
+mcp>=1.30.0,<2.0.0   # 1.30.0 confirmed working: fixes DNS-rebinding SSRF + 3 HIGH advisories, stays on the v1 API this code uses
+starlette>=1.3.1         # fixes CVE-2026-48710 "BadHost" auth bypass + CVE-2026-48817/48818/54282/54283
+                         # (transitive via mcp's HTTP transport — pinned directly so it isn't left to resolver luck)
+httpx>=0.27.0
+python-dotenv>=1.0.0
+asyncpg>=0.29.0
+pypdf>=6.4.0             # fixes CVE-2025-55197, -62707, -62708, -66019 (DoS via crafted PDFs: RAM exhaustion / infinite loop)
+fpdf2>=2.7.0
+python-docx>=1.1.0
+openpyxl>=3.1.0
+python-pptx>=0.6.23
+pywin32>=311; sys_platform == "win32"  # PowerPoint COM automation for creating slide masters
+rapidocr>=3.2.0           # OCR + layout extraction for image_analyze
+onnxruntime>=1.22.0       # inference backend used by RapidOCR
+
+# Transitive dependencies pinned directly (not just left to whatever github.py's
+# pyjwt/cryptography, fpdf2's Pillow, or python-docx's lxml happen to resolve to):
+cryptography>=50.0.1     # fixes CVE-2026-69247, -69248, -26007, -34073, -39892
+Pillow>=12.3.0            # fixes CVE-2026-54059, -54060, -55379, -59199, -42308, -42309, -55798 (decompression bombs, buffer overflows, shell injection via file path)
+lxml>=6.1.1               # fixes CVE-2026-41066 (XXE local file read) and CVE-2026-49825
